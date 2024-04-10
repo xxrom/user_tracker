@@ -1,0 +1,5 @@
+{
+  "name": "user_tracker",
+  "private": true,
+  "workspaces": ["frontend", "backend"]
+}

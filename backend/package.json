@@ -6,23 +6,30 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "build:client": "tsc src/tracker.ts --outDir public/",
+    "build:client:watch": "tsc src/tracker.ts --outDir public/ --watch",
     "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts",
+    "dev": "ts-node-dev src/index.ts --watch",
     "lint": "prettier --check .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "mongo:start": "docker compose up -d",
+    "mongo:stop": "docker compose down"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fastify/cors": "^9.0.1",
     "@fastify/static": "^7.0.3",
     "fastify": "^4.24.3",
-    "fastify-static": "^4.7.0"
+    "fastify-static": "^4.7.0",
+    "mongoose": "^6.12.3",
+    "pino-pretty": "^10.2.0"
   },
   "devDependencies": {
     "@types/node": "^20.9.4",
     "prettier": "^3.2.5",
     "ts-node": "^9.1.1",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.3"
   }
 }

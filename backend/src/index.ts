@@ -18,7 +18,8 @@ const server = fastify({
 });
 
 server.register(cors, {
-  origin: false,
+  origin: "*",
+  methods: ["POST", "OPTIONS"],
 });
 
 server.register(fastifyStatic, {
@@ -26,20 +27,24 @@ server.register(fastifyStatic, {
 });
 
 server.get("/tracker", async (request, reply) => {
+  console.log(">>> SEND tracker.js");
   return reply.sendFile("tracker.js");
 });
 
+server.options("/track", async (request, reply) => {
+  console.log("OPTIONS!!!", request.body);
+});
 server.post("/track", async (request, reply) => {
-  const track =
-    typeof request.body === "string" ? JSON.parse(request.body) : request.body;
-  console.log("Track data", track);
+  console.log(">>> TRACK", request.body);
 
   try {
-    const tracks = await Track.insertMany(track);
-    reply.status(422);
-    reply.send(tracks);
+    const { tracks } = request.body as { tracks: Array<any> };
+
+    const tracksDocs = await Track.insertMany(tracks);
+
+    reply.status(200).send({ ok: true, data: tracksDocs });
   } catch (error) {
-    reply.status(200).send(error);
+    reply.status(422).send({ ok: false, error });
   }
 });
 

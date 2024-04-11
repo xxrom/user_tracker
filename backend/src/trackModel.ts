@@ -1,20 +1,11 @@
 import { Schema, model } from "mongoose";
 
-/*
-{
-	"event": "pageview",
-	"tags": [],
-	"url": "http://localhost:50000/1.html",
-	"title": "My website",
-	"ts": 1675209600
-}
-*/
 const trackSchema = new Schema({
-  event: String,
+  event: { type: String, required: [true, '"event" is required'] },
   tags: [String],
-  url: String,
-  title: String,
-  ts: Number,
+  url: { type: String, required: [true, '"url" is required'] },
+  title: { type: String, required: [true, '"title" is required'] },
+  ts: { type: Number, required: [true, '"ts" is required'] },
 });
 
 export const Track = model("Track", trackSchema);

@@ -39,9 +39,20 @@ class Tracker implements Tracker {
     this.resetIssueBuffer();
     this.resetLastPushTime();
 
+    if ((window as any)?.nc?.q?.length > 0) {
+      const q = (window as any)?.nc?.q;
+      const t = (window as any)?.nc?.t;
+
+      q.forEach((a: Array<string>) => {
+        const [t, ...tags] = [...a];
+        this.track(t, ...tags);
+      });
+      this.track("userInitTime", t);
+    }
+
     this.beforeCloseBrowser = () => {
       if (this.buffer.length > 0) {
-        this.pushTracks();
+        this.pushTracks("text/plain"); // to avoid additional "OPTIONS" requests
       }
     };
     this.beforeHiddenBrowser = () => {
@@ -51,22 +62,7 @@ class Tracker implements Tracker {
     };
 
     document.addEventListener("visibilitychange", this.beforeHiddenBrowser);
-    window.addEventListener("beforeunload", this.beforeCloseBrowser); // worse performance
-
-    /*
-    // Awful user experience 
-    this.beforeCloseBrowser = (event: BeforeUnloadEvent) => {
-      if (this.buffer.length > 0) {
-        // Recommended
-        event.preventDefault();
-
-        // Included for legacy support, e.g. Chrome/Edge < 119
-        event.returnValue = true; // send alert
-
-        return this.pushTracks();
-      }
-    window.addEventListener("beforeunload", this.beforeCloseBrowser); // worse performance
-    */
+    window.addEventListener("beforeunload", this.beforeCloseBrowser);
   }
 
   remove() {
@@ -102,8 +98,12 @@ class Tracker implements Tracker {
     this.issueBuffer = [];
   }
 
-  async pushTracks() {
-    console.log(">>> pushTracks", this.buffer.length);
+  async pushTracks(contentType = "application/json") {
+    console.info(
+      `>>> pushTracks ${contentType}`,
+      this.buffer.length,
+      this.buffer
+    );
 
     if (this.buffer.length === 0) {
       return;
@@ -115,12 +115,10 @@ class Tracker implements Tracker {
           tracks: this.buffer,
         }),
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": contentType,
         },
         method: "POST",
       });
-
-      //const body = await res.json(); // get body from server if needed
 
       if (res.status === 422 || !res.ok) {
         throw Error("Not valid server status response");
@@ -148,7 +146,6 @@ class Tracker implements Tracker {
       this.resetIssueBuffer();
       this.resetIssueTimeout();
 
-      // Run default pusTracks process
       this.pushTracks();
     }, this.throttleInterval);
   }
@@ -165,7 +162,7 @@ class Tracker implements Tracker {
     );
   }
 
-  addTrack(event: string, ...tags: string[]) {
+  track(event: string, ...tags: string[]) {
     const track = this.prepareObject(event, ...tags);
     const currentTime = new Date().getTime();
 
@@ -187,10 +184,6 @@ class Tracker implements Tracker {
     } else {
       this.setPushTimeout();
     }
-  }
-
-  track(event: string, ...tags: string[]) {
-    this.addTrack(event, ...tags);
   }
 }
 

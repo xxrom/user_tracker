@@ -49,14 +49,24 @@ var BUFFER_MAX_SIZE = 3;
 var Tracker = /** @class */ (function () {
     function Tracker() {
         var _this = this;
+        var _a, _b, _c, _d;
         this.throttleInterval = THROTTLE_SECONDS * 1000;
         this.pushBufferMaxSize = BUFFER_MAX_SIZE;
         this.resetBuffer();
         this.resetIssueBuffer();
         this.resetLastPushTime();
+        if (((_b = (_a = window === null || window === void 0 ? void 0 : window.nc) === null || _a === void 0 ? void 0 : _a.q) === null || _b === void 0 ? void 0 : _b.length) > 0) {
+            var q = (_c = window === null || window === void 0 ? void 0 : window.nc) === null || _c === void 0 ? void 0 : _c.q;
+            var t = (_d = window === null || window === void 0 ? void 0 : window.nc) === null || _d === void 0 ? void 0 : _d.t;
+            q.forEach(function (a) {
+                var _a = __spreadArray([], a, true), t = _a[0], tags = _a.slice(1);
+                _this.track.apply(_this, __spreadArray([t], tags, false));
+            });
+            this.track("userInitTime", t);
+        }
         this.beforeCloseBrowser = function () {
             if (_this.buffer.length > 0) {
-                _this.pushTracks();
+                _this.pushTracks("text/plain"); // to avoid additional "OPTIONS" requests
             }
         };
         this.beforeHiddenBrowser = function () {
@@ -65,21 +75,7 @@ var Tracker = /** @class */ (function () {
             }
         };
         document.addEventListener("visibilitychange", this.beforeHiddenBrowser);
-        window.addEventListener("beforeunload", this.beforeCloseBrowser); // worse performance
-        /*
-        // Awful user experience
-        this.beforeCloseBrowser = (event: BeforeUnloadEvent) => {
-          if (this.buffer.length > 0) {
-            // Recommended
-            event.preventDefault();
-    
-            // Included for legacy support, e.g. Chrome/Edge < 119
-            event.returnValue = true; // send alert
-    
-            return this.pushTracks();
-          }
-        window.addEventListener("beforeunload", this.beforeCloseBrowser); // worse performance
-        */
+        window.addEventListener("beforeunload", this.beforeCloseBrowser);
     }
     Tracker.prototype.remove = function () {
         document.removeEventListener("visibilitychange", this.beforeHiddenBrowser);
@@ -116,13 +112,14 @@ var Tracker = /** @class */ (function () {
         this.issueBuffer = [];
     };
     Tracker.prototype.pushTracks = function () {
-        return __awaiter(this, void 0, void 0, function () {
+        return __awaiter(this, arguments, void 0, function (contentType) {
             var res, error_1;
             var _a;
+            if (contentType === void 0) { contentType = "application/json"; }
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        console.log(">>> pushTracks", this.buffer.length);
+                        console.info(">>> pushTracks ".concat(contentType), this.buffer.length, this.buffer);
                         if (this.buffer.length === 0) {
                             return [2 /*return*/];
                         }
@@ -134,13 +131,12 @@ var Tracker = /** @class */ (function () {
                                     tracks: this.buffer,
                                 }),
                                 headers: {
-                                    "Content-Type": "application/json",
+                                    "Content-Type": contentType,
                                 },
                                 method: "POST",
                             })];
                     case 2:
                         res = _b.sent();
-                        //const body = await res.json(); // get body from server if needed
                         if (res.status === 422 || !res.ok) {
                             throw Error("Not valid server status response");
                         }
@@ -170,7 +166,6 @@ var Tracker = /** @class */ (function () {
             (_a = _this.buffer).push.apply(_a, _this.issueBuffer);
             _this.resetIssueBuffer();
             _this.resetIssueTimeout();
-            // Run default pusTracks process
             _this.pushTracks();
         }, this.throttleInterval);
     };
@@ -182,7 +177,7 @@ var Tracker = /** @class */ (function () {
         }
         this.pushTimeout = setTimeout(function () { return _this.pushTracks(); }, this.throttleInterval);
     };
-    Tracker.prototype.addTrack = function (event) {
+    Tracker.prototype.track = function (event) {
         var tags = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             tags[_i - 1] = arguments[_i];
@@ -203,13 +198,6 @@ var Tracker = /** @class */ (function () {
         else {
             this.setPushTimeout();
         }
-    };
-    Tracker.prototype.track = function (event) {
-        var tags = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            tags[_i - 1] = arguments[_i];
-        }
-        this.addTrack.apply(this, __spreadArray([event], tags, false));
     };
     return Tracker;
 }());

@@ -49,7 +49,7 @@ var BUFFER_MAX_SIZE = 3;
 var Tracker = /** @class */ (function () {
     function Tracker() {
         var _this = this;
-        var _a, _b, _c, _d;
+        var _a, _b, _c;
         this.throttleInterval = THROTTLE_SECONDS * 1000;
         this.pushBufferMaxSize = BUFFER_MAX_SIZE;
         this.resetBuffer();
@@ -57,12 +57,12 @@ var Tracker = /** @class */ (function () {
         this.resetLastPushTime();
         if (((_b = (_a = window === null || window === void 0 ? void 0 : window.nc) === null || _a === void 0 ? void 0 : _a.q) === null || _b === void 0 ? void 0 : _b.length) > 0) {
             var q = (_c = window === null || window === void 0 ? void 0 : window.nc) === null || _c === void 0 ? void 0 : _c.q;
-            var t = (_d = window === null || window === void 0 ? void 0 : window.nc) === null || _d === void 0 ? void 0 : _d.t;
             q.forEach(function (a) {
-                var _a = __spreadArray([], a, true), t = _a[0], tags = _a.slice(1);
-                _this.track.apply(_this, __spreadArray([t], tags, false));
+                var _a = __spreadArray([], a, true), event = _a[0], tags = _a.slice(1);
+                _this.track.apply(_this, __spreadArray([event], tags, false));
             });
-            this.track("userInitTime", t);
+            //const t = (window as any)?.nc?.t;
+            //this.track("userInitTime", t);
         }
         this.beforeCloseBrowser = function () {
             if (_this.buffer.length > 0) {
@@ -88,7 +88,7 @@ var Tracker = /** @class */ (function () {
         }
         return {
             event: event,
-            tags: tags,
+            tags: tags ? tags : [],
             title: document.title,
             ts: Math.floor(new Date().getTime() / 1000), // in seconds
             url: window.location.href,
@@ -119,7 +119,7 @@ var Tracker = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        console.info(">>> pushTracks ".concat(contentType), this.buffer.length, this.buffer);
+                        //console.info(`>>> pushTracks ${contentType}`, this.buffer.length);
                         if (this.buffer.length === 0) {
                             return [2 /*return*/];
                         }
@@ -156,8 +156,8 @@ var Tracker = /** @class */ (function () {
         });
     };
     Tracker.prototype.setIssuePushTimeout = function () {
+        //console.log(`IssueBuffer size: ${this.issueBuffer.length}`);
         var _this = this;
-        console.log("IssueBuffer size: ".concat(this.issueBuffer.length));
         if (typeof this.issueTimeout !== "undefined") {
             return;
         }
@@ -170,8 +170,8 @@ var Tracker = /** @class */ (function () {
         }, this.throttleInterval);
     };
     Tracker.prototype.setPushTimeout = function () {
+        //console.log(`buffer size: ${this.buffer.length}`);
         var _this = this;
-        console.log("buffer size: ".concat(this.buffer.length));
         if (typeof this.pushTimeout !== "undefined") {
             return;
         }

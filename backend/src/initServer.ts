@@ -3,7 +3,6 @@ import fastifyStatic from "@fastify/static";
 import cors from "@fastify/cors";
 import fastifyEnv from "@fastify/env";
 import path from "node:path";
-import mongoose from "mongoose";
 
 declare module "fastify" {
   interface FastifyInstance {

@@ -41,13 +41,13 @@ class Tracker implements Tracker {
 
     if ((window as any)?.nc?.q?.length > 0) {
       const q = (window as any)?.nc?.q;
-      const t = (window as any)?.nc?.t;
-
       q.forEach((a: Array<string>) => {
-        const [t, ...tags] = [...a];
-        this.track(t, ...tags);
+        const [event, ...tags] = [...a];
+        this.track(event, ...tags);
       });
-      this.track("userInitTime", t);
+
+      //const t = (window as any)?.nc?.t;
+      //this.track("userInitTime", t);
     }
 
     this.beforeCloseBrowser = () => {
@@ -73,7 +73,7 @@ class Tracker implements Tracker {
   prepareObject(event: string, ...tags: string[]) {
     return {
       event,
-      tags,
+      tags: tags ? tags : [],
       title: document.title,
       ts: Math.floor(new Date().getTime() / 1000), // in seconds
       url: window.location.href,
@@ -99,11 +99,7 @@ class Tracker implements Tracker {
   }
 
   async pushTracks(contentType = "application/json") {
-    console.info(
-      `>>> pushTracks ${contentType}`,
-      this.buffer.length,
-      this.buffer
-    );
+    //console.info(`>>> pushTracks ${contentType}`, this.buffer.length);
 
     if (this.buffer.length === 0) {
       return;
@@ -134,7 +130,7 @@ class Tracker implements Tracker {
   }
 
   setIssuePushTimeout() {
-    console.log(`IssueBuffer size: ${this.issueBuffer.length}`);
+    //console.log(`IssueBuffer size: ${this.issueBuffer.length}`);
 
     if (typeof this.issueTimeout !== "undefined") {
       return;
@@ -150,7 +146,7 @@ class Tracker implements Tracker {
     }, this.throttleInterval);
   }
   setPushTimeout() {
-    console.log(`buffer size: ${this.buffer.length}`);
+    //console.log(`buffer size: ${this.buffer.length}`);
 
     if (typeof this.pushTimeout !== "undefined") {
       return;
@@ -165,8 +161,8 @@ class Tracker implements Tracker {
   track(event: string, ...tags: string[]) {
     const track = this.prepareObject(event, ...tags);
     const currentTime = new Date().getTime();
-
     const isFirstTrack = this.buffer.length === 0;
+
     if (isFirstTrack) {
       this.lastPushTime = currentTime;
     }
@@ -176,7 +172,6 @@ class Tracker implements Tracker {
     const isBufferFull = this.buffer.length >= this.pushBufferMaxSize;
     const isTimeoutForPush =
       currentTime - this.lastPushTime >= this.throttleInterval;
-
     const isPushTracks = isBufferFull || isTimeoutForPush;
 
     if (isPushTracks) {

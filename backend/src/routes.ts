@@ -14,11 +14,19 @@ export const addRoutes = (server: FastifyInstance) => {
           : request.body
       ) as { tracks: Array<any> };
 
-      const tracksDocs = await Track.insertMany(tracks);
+      const tracksDocs = tracks.map((track) => new Track(track));
+      await Promise.all(tracksDocs.map((track) => track.validate()));
 
-      reply.status(200).send({ ok: true, data: tracksDocs });
+      reply.status(200).send({ ok: true });
+
+      Track.insertMany(tracksDocs).catch((error) => {
+        console.error("Failed to insert tracks", error);
+      });
+
+      return reply;
     } catch (error) {
-      reply.status(422).send({ ok: false, error });
+      console.log("error", error);
+      return reply.status(422).send({ ok: false, error });
     }
   });
 };

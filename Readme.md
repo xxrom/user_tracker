@@ -1,5 +1,9 @@
 # User Tracker
 
+![Image0](https://github.com/xxrom/user_tracker/assets/14174697/049fde38-0c83-41e3-9ac4-d9e8b2b08109)
+
+---
+
 User Tracker is an open-source analytics tool inspired by Google Analytics.
 
 It is designed to capture and analyze user interactions on websites, providing insights similar to those offered by major analytics services.

@@ -13,8 +13,7 @@
     "lint": "prettier --check .",
     "lint:fix": "prettier --write .",
     "mongo:start": "docker compose up -d",
-    "mongo:stop": "docker compose down",
-    "prepare": "husky"
+    "mongo:stop": "docker compose down"
   },
   "keywords": [],
   "author": "",
@@ -24,7 +23,6 @@
     "@fastify/env": "^4.3.0",
     "@fastify/static": "^7.0.3",
     "fastify": "^4.24.3",
-    "fastify-static": "^4.7.0",
     "mongoose": "^6.12.3",
     "pino-pretty": "^10.2.0"
   },

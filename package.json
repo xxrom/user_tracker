@@ -1,5 +1,13 @@
 {
   "name": "user_tracker",
   "private": true,
-  "workspaces": ["frontend", "backend"]
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "prepare": "husky",
+    "lint:fix": "yarn --cwd backend lint:fix",
+    "lint": "yarn --cwd backend lint"
+  }
 }

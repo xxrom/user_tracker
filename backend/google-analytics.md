@@ -1,6 +1,6 @@
 <!-- Google Analytics -->
 <script>
-  // Renamed arguments, so it will be easier to read code
+  // Renamed arguments, so it will be easier to read the code
   (function (window, document, name, scriptUrl, globalMethod, a, m) {
     window["GoogleAnalyticsObject"] = globalMethod; // set marker, where global method will be stored
     (window[globalMethod] =
@@ -9,7 +9,7 @@
         (window[globalMethod].q = window[globalMethod].q || []) // reuse or init new empty queue for arguments/events/tags 
           .push(arguments); // add new arguments from function "globalMethod" to the global q (queue) 
       }),
-      (window[globalMethod].l = 1 * new Date()); // save current client time for statistics ?
+      (window[globalMethod].l = 1 * new Date()); // save current client time for load statistics?
 
     (a = document.createElement(name)), // create new <script /> element
       (m = document.getElementsByTagName(name)[0]); // get first <script /> on the page

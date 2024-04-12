@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 export const startServer = (
   server: FastifyInstance,
-  portKeyName: keyof typeof envPorts,
+  portKeyName: keyof typeof envPorts
 ) => {
   server.listen({ port: server.config[portKeyName] }, async (err, address) => {
     if (err) {
@@ -14,8 +14,10 @@ export const startServer = (
 
     try {
       mongoose.set("strictQuery", false);
-      await mongoose.connect(process.env.MONGO_URL as string);
-      console.log(">>> MongoDB connected");
+      if (!mongoose.connection.readyState) {
+        await mongoose.connect(process.env.MONGO_URL as string);
+        console.log(">>> MongoDB connected");
+      }
     } catch (error) {
       console.error("MongoDB connect issue", error);
       process.exit(1);

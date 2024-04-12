@@ -154,7 +154,7 @@ class Tracker implements Tracker {
 
     this.pushTimeout = setTimeout(
       () => this.pushTracks(),
-      this.throttleInterval,
+      this.throttleInterval
     );
   }
 

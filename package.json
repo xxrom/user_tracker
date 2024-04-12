@@ -6,8 +6,15 @@
     "backend"
   ],
   "scripts": {
-    "prepare": "husky",
-    "lint:fix": "yarn --cwd backend lint:fix",
-    "lint": "yarn --cwd backend lint"
+    "dev:backend": "yarn --cwd backend dev",
+    "dev:frontend": "yarn --cwd frontend dev",
+    "dev": "concurrently --kill-others-on-fail \"yarn dev:backend\" \"yarn dev:frontend\"",
+    "lint:fix": "yarn --cwd backend lint:fix && yarn --cwd frontend lint:fix",
+    "lint": "yarn --cwd backend lint && yarn --cwd frontend lint",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2",
+    "husky": "^9.0.11"
   }
 }

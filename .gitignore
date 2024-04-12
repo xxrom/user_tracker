@@ -3,5 +3,4 @@
 **/dist
 backend/mongo-volume/
 
-/**/.env*
-/**/env-*
+/**/.env

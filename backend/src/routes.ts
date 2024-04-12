@@ -14,6 +14,8 @@ export const addRoutes = (server: FastifyInstance) => {
           : request.body
       ) as { tracks: Array<any> };
 
+      console.log("tracks", tracks.length, tracks);
+
       const tracksDocs = tracks.map((track) => new Track(track));
       await Promise.all(tracksDocs.map((track) => track.validate()));
 

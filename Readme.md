@@ -45,3 +45,20 @@ yarn dev
 ```
 
 Navigate to [http://localhost:3000/1.html](http://localhost:3000/1.html)
+
+## Tech stack:
+
+- yarn monorepo
+- husky
+
+Front:
+
+- next.js
+- prettier
+
+Backend:
+
+- fastify
+- mongoDB
+- mongoose
+- prettier

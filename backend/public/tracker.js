@@ -61,11 +61,13 @@ var Tracker = /** @class */ (function () {
                 var _a = __spreadArray([], a, true), event = _a[0], tags = _a.slice(1);
                 _this.track.apply(_this, __spreadArray([event], tags, false));
             });
+            // For users load time statistics
             //const t = (window as any)?.nc?.t;
             //this.track("userInitTime", t);
         }
         this.beforeCloseBrowser = function () {
             if (_this.buffer.length > 0) {
+                console.log(">>> beforeCloseBrowser");
                 _this.pushTracks("text/plain"); // to avoid additional "OPTIONS" requests
             }
         };
@@ -119,7 +121,7 @@ var Tracker = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        //console.info(`>>> pushTracks ${contentType}`, this.buffer.length);
+                        console.info(">>> pushTracks ".concat(contentType), this.buffer.length);
                         if (this.buffer.length === 0) {
                             return [2 /*return*/];
                         }
@@ -156,8 +158,8 @@ var Tracker = /** @class */ (function () {
         });
     };
     Tracker.prototype.setIssuePushTimeout = function () {
-        //console.log(`IssueBuffer size: ${this.issueBuffer.length}`);
         var _this = this;
+        console.log("IssueBuffer size: ".concat(this.issueBuffer.length));
         if (typeof this.issueTimeout !== "undefined") {
             return;
         }
@@ -182,6 +184,7 @@ var Tracker = /** @class */ (function () {
         for (var _i = 1; _i < arguments.length; _i++) {
             tags[_i - 1] = arguments[_i];
         }
+        console.log.apply(console, __spreadArray([">>> add new track", event], tags, false));
         var track = this.prepareObject.apply(this, __spreadArray([event], tags, false));
         var currentTime = new Date().getTime();
         var isFirstTrack = this.buffer.length === 0;

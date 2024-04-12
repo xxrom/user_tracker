@@ -46,12 +46,14 @@ class Tracker implements Tracker {
         this.track(event, ...tags);
       });
 
+      // For users load time statistics
       //const t = (window as any)?.nc?.t;
       //this.track("userInitTime", t);
     }
 
     this.beforeCloseBrowser = () => {
       if (this.buffer.length > 0) {
+        console.log(">>> beforeCloseBrowser");
         this.pushTracks("text/plain"); // to avoid additional "OPTIONS" requests
       }
     };
@@ -99,7 +101,7 @@ class Tracker implements Tracker {
   }
 
   async pushTracks(contentType = "application/json") {
-    //console.info(`>>> pushTracks ${contentType}`, this.buffer.length);
+    console.info(`>>> pushTracks ${contentType}`, this.buffer.length);
 
     if (this.buffer.length === 0) {
       return;
@@ -130,7 +132,7 @@ class Tracker implements Tracker {
   }
 
   setIssuePushTimeout() {
-    //console.log(`IssueBuffer size: ${this.issueBuffer.length}`);
+    console.log(`IssueBuffer size: ${this.issueBuffer.length}`);
 
     if (typeof this.issueTimeout !== "undefined") {
       return;
@@ -159,6 +161,8 @@ class Tracker implements Tracker {
   }
 
   track(event: string, ...tags: string[]) {
+    console.log(">>> add new track", event, ...tags);
+
     const track = this.prepareObject(event, ...tags);
     const currentTime = new Date().getTime();
     const isFirstTrack = this.buffer.length === 0;

@@ -49,14 +49,14 @@ var BUFFER_MAX_SIZE = 3;
 var Tracker = /** @class */ (function () {
     function Tracker() {
         var _this = this;
-        var _a, _b, _c;
+        var _a, _b;
         this.throttleInterval = THROTTLE_SECONDS * 1000;
         this.pushBufferMaxSize = BUFFER_MAX_SIZE;
         this.resetBuffer();
         this.resetIssueBuffer();
         this.resetLastPushTime();
         if (((_b = (_a = window === null || window === void 0 ? void 0 : window.nc) === null || _a === void 0 ? void 0 : _a.q) === null || _b === void 0 ? void 0 : _b.length) > 0) {
-            var q = (_c = window === null || window === void 0 ? void 0 : window.nc) === null || _c === void 0 ? void 0 : _c.q;
+            var q = window.nc.q;
             q.forEach(function (a) {
                 var _a = __spreadArray([], a, true), event = _a[0], tags = _a.slice(1);
                 _this.track.apply(_this, __spreadArray([event], tags, false));
@@ -94,9 +94,9 @@ var Tracker = /** @class */ (function () {
             url: window.location.href,
         };
     };
-    Tracker.prototype.resetTimeout = function (methodName) {
-        clearTimeout(this[methodName]);
-        this[methodName] = undefined;
+    Tracker.prototype.resetTimeout = function (timeoutType) {
+        clearTimeout(this[timeoutType]);
+        this[timeoutType] = undefined;
     };
     Tracker.prototype.resetLastPushTime = function () {
         this.lastPushTime = new Date().getTime();
@@ -115,7 +115,6 @@ var Tracker = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        console.info(">>> pushTracks ".concat(contentType), this.buffer.length);
                         if (this.buffer.length === 0) {
                             return [2 /*return*/];
                         }
@@ -151,19 +150,17 @@ var Tracker = /** @class */ (function () {
             });
         });
     };
-    Tracker.prototype.setFunctionTimeout = function (methodName) {
+    Tracker.prototype.setFunctionTimeout = function (timeoutType) {
         var _this = this;
-        var _a;
-        console.log("Buffer size: ".concat((_a = this[methodName === "pushTimeout" ? "buffer" : "issueBuffer"]) === null || _a === void 0 ? void 0 : _a.length));
-        if (typeof this[methodName] !== "undefined") {
+        if (typeof this[timeoutType] !== "undefined") {
             return;
         }
-        this[methodName] = setTimeout(function () {
+        this[timeoutType] = setTimeout(function () {
             var _a;
-            if (methodName === "issueTimeout") {
+            if (timeoutType === "issueTimeout") {
                 (_a = _this.buffer).push.apply(_a, _this.issueBuffer);
                 _this.resetIssueBuffer();
-                _this.resetTimeout(methodName);
+                _this.resetTimeout(timeoutType);
             }
             _this.pushTracks();
         }, this.throttleInterval);
@@ -173,7 +170,6 @@ var Tracker = /** @class */ (function () {
         for (var _i = 1; _i < arguments.length; _i++) {
             tags[_i - 1] = arguments[_i];
         }
-        console.log.apply(console, __spreadArray([">>> add new track", event], tags, false));
         var track = this.prepareObject.apply(this, __spreadArray([event], tags, false));
         var currentTime = new Date().getTime();
         var isFirstTrack = this.buffer.length === 0;

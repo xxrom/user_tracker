@@ -10,9 +10,9 @@ type TrackType = {
   url: string;
 };
 
-type PushTypes = "issueTimeout" | "pushTimeout";
+type TimeoutTypes = "issueTimeout" | "pushTimeout";
 
-type TimeoutType = ReturnType<typeof setTimeout>;
+type TimeoutReturnType = ReturnType<typeof setTimeout>;
 
 interface Tracker {
   buffer: Array<TrackType>;
@@ -20,8 +20,8 @@ interface Tracker {
 
   lastPushTime: number;
 
-  pushTimeout: TimeoutType | undefined;
-  issueTimeout: TimeoutType | undefined;
+  pushTimeout: TimeoutReturnType | undefined;
+  issueTimeout: TimeoutReturnType | undefined;
 
   pushBufferMaxSize: number;
   throttleInterval: number;
@@ -42,7 +42,7 @@ class Tracker implements Tracker {
     this.resetLastPushTime();
 
     if ((window as any)?.nc?.q?.length > 0) {
-      const q = (window as any)?.nc?.q;
+      const q = (window as any).nc.q;
 
       q.forEach((a: Array<string>) => {
         const [event, ...tags] = [...a];
@@ -82,9 +82,9 @@ class Tracker implements Tracker {
     };
   }
 
-  resetTimeout(methodName: PushTypes) {
-    clearTimeout(this[methodName]);
-    this[methodName] = undefined;
+  resetTimeout(timeoutType: TimeoutTypes) {
+    clearTimeout(this[timeoutType]);
+    this[timeoutType] = undefined;
   }
   resetLastPushTime() {
     this.lastPushTime = new Date().getTime();
@@ -97,8 +97,6 @@ class Tracker implements Tracker {
   }
 
   async pushTracks(contentType = "application/json") {
-    console.info(`>>> pushTracks ${contentType}`, this.buffer.length);
-
     if (this.buffer.length === 0) {
       return;
     }
@@ -127,21 +125,17 @@ class Tracker implements Tracker {
     this.resetTimeout("pushTimeout");
   }
 
-  setFunctionTimeout(methodName: PushTypes) {
-    console.log(
-      `Buffer size: ${this[methodName === "pushTimeout" ? "buffer" : "issueBuffer"]?.length}`,
-    );
-
-    if (typeof this[methodName] !== "undefined") {
+  setFunctionTimeout(timeoutType: TimeoutTypes) {
+    if (typeof this[timeoutType] !== "undefined") {
       return;
     }
 
-    this[methodName] = setTimeout(() => {
-      if (methodName === "issueTimeout") {
+    this[timeoutType] = setTimeout(() => {
+      if (timeoutType === "issueTimeout") {
         this.buffer.push(...this.issueBuffer);
 
         this.resetIssueBuffer();
-        this.resetTimeout(methodName);
+        this.resetTimeout(timeoutType);
       }
 
       this.pushTracks();
@@ -149,8 +143,6 @@ class Tracker implements Tracker {
   }
 
   track(event: string, ...tags: string[]) {
-    console.log(">>> add new track", event, ...tags);
-
     const track = this.prepareObject(event, ...tags);
     const currentTime = new Date().getTime();
     const isFirstTrack = this.buffer.length === 0;

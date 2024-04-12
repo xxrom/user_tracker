@@ -12,7 +12,7 @@ type TrackType = {
 
 type TimeoutTypes = "issueTimeout" | "pushTimeout";
 
-type TimeoutReturnType = ReturnType<typeof setTimeout>;
+type SetTimeoutType = ReturnType<typeof setTimeout>;
 
 interface Tracker {
   buffer: Array<TrackType>;
@@ -20,8 +20,8 @@ interface Tracker {
 
   lastPushTime: number;
 
-  pushTimeout: TimeoutReturnType | undefined;
-  issueTimeout: TimeoutReturnType | undefined;
+  pushTimeout: SetTimeoutType | undefined;
+  issueTimeout: SetTimeoutType | undefined;
 
   pushBufferMaxSize: number;
   throttleInterval: number;

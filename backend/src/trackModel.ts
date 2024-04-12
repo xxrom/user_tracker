@@ -9,7 +9,7 @@ const trackSchema = new Schema({
       validator: function (v: Array<String>) {
         return v.length >= 0;
       },
-      message: () => '"tags" should a list',
+      message: () => '"tags" should be a list',
     },
   },
   url: { type: String, required: [true, '"url" is required'] },

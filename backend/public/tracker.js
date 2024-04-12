@@ -61,14 +61,16 @@ var Tracker = /** @class */ (function () {
                 var _a = __spreadArray([], a, true), event = _a[0], tags = _a.slice(1);
                 _this.track.apply(_this, __spreadArray([event], tags, false));
             });
+            /*
             // For users load time statistics
-            //const t = (window as any)?.nc?.t;
-            //this.track("userInitTime", t);
+            const t = (window as any)?.nc?.t;
+            this.track("userInitTime", t);
+            */
         }
         this.beforeCloseBrowser = function () {
             if (_this.buffer.length > 0) {
-                console.log(">>> beforeCloseBrowser");
-                _this.pushTracks("text/plain"); // to avoid additional "OPTIONS" requests
+                // to avoid additional preflight "OPTIONS" request
+                _this.pushTracks("text/plain");
             }
         };
         this.beforeHiddenBrowser = function () {
@@ -79,10 +81,6 @@ var Tracker = /** @class */ (function () {
         document.addEventListener("visibilitychange", this.beforeHiddenBrowser);
         window.addEventListener("beforeunload", this.beforeCloseBrowser);
     }
-    Tracker.prototype.remove = function () {
-        document.removeEventListener("visibilitychange", this.beforeHiddenBrowser);
-        window.removeEventListener("beforeunload", this.beforeCloseBrowser);
-    };
     Tracker.prototype.prepareObject = function (event) {
         var tags = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -96,13 +94,9 @@ var Tracker = /** @class */ (function () {
             url: window.location.href,
         };
     };
-    Tracker.prototype.resetPushTimeout = function () {
-        clearTimeout(this.pushTimeout);
-        this.pushTimeout = undefined;
-    };
-    Tracker.prototype.resetIssueTimeout = function () {
-        clearTimeout(this.issueTimeout);
-        this.issueTimeout = undefined;
+    Tracker.prototype.resetTimeout = function (methodName) {
+        clearTimeout(this[methodName]);
+        this[methodName] = undefined;
     };
     Tracker.prototype.resetLastPushTime = function () {
         this.lastPushTime = new Date().getTime();
@@ -146,38 +140,33 @@ var Tracker = /** @class */ (function () {
                     case 3:
                         error_1 = _b.sent();
                         (_a = this.issueBuffer).push.apply(_a, this.buffer);
-                        this.setIssuePushTimeout();
+                        this.setFunctionTimeout("issueTimeout");
                         return [3 /*break*/, 4];
                     case 4:
                         this.resetLastPushTime();
                         this.resetBuffer();
-                        this.resetPushTimeout();
+                        this.resetTimeout("pushTimeout");
                         return [2 /*return*/];
                 }
             });
         });
     };
-    Tracker.prototype.setIssuePushTimeout = function () {
+    Tracker.prototype.setFunctionTimeout = function (methodName) {
         var _this = this;
-        console.log("IssueBuffer size: ".concat(this.issueBuffer.length));
-        if (typeof this.issueTimeout !== "undefined") {
+        var _a;
+        console.log("Buffer size: ".concat((_a = this[methodName === "pushTimeout" ? "buffer" : "issueBuffer"]) === null || _a === void 0 ? void 0 : _a.length));
+        if (typeof this[methodName] !== "undefined") {
             return;
         }
-        this.issueTimeout = setTimeout(function () {
+        this[methodName] = setTimeout(function () {
             var _a;
-            (_a = _this.buffer).push.apply(_a, _this.issueBuffer);
-            _this.resetIssueBuffer();
-            _this.resetIssueTimeout();
+            if (methodName === "issueTimeout") {
+                (_a = _this.buffer).push.apply(_a, _this.issueBuffer);
+                _this.resetIssueBuffer();
+                _this.resetTimeout(methodName);
+            }
             _this.pushTracks();
         }, this.throttleInterval);
-    };
-    Tracker.prototype.setPushTimeout = function () {
-        //console.log(`buffer size: ${this.buffer.length}`);
-        var _this = this;
-        if (typeof this.pushTimeout !== "undefined") {
-            return;
-        }
-        this.pushTimeout = setTimeout(function () { return _this.pushTracks(); }, this.throttleInterval);
     };
     Tracker.prototype.track = function (event) {
         var tags = [];
@@ -199,7 +188,7 @@ var Tracker = /** @class */ (function () {
             this.pushTracks();
         }
         else {
-            this.setPushTimeout();
+            this.setFunctionTimeout("pushTimeout");
         }
     };
     return Tracker;

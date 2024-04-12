@@ -18,11 +18,11 @@
     a.src = scriptUrl; // set src for loading "our" script
     m.parentNode.insertBefore(a, m); // insert "our" script before all scripts on the page
   })(
-    window,
-    document,
-    "script",
-    "https://www.google-analytics.com/analytics.js",
-    "ga"
+    window, // passing window, for code minimization
+    document, // passing document, for minimization 
+    "script", // 'script' tag name
+    "https://www.google-analytics.com/analytics.js", // link to main script
+    "ga" // global method name
   ); // run function
 
   // this will send all tags in queue, that will be processed later, after script will be loaded

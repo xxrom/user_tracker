@@ -10,6 +10,8 @@ type TrackType = {
   url: string;
 };
 
+type PushTypes = "issueTimeout" | "pushTimeout";
+
 type TimeoutType = ReturnType<typeof setTimeout>;
 
 interface Tracker {
@@ -41,20 +43,23 @@ class Tracker implements Tracker {
 
     if ((window as any)?.nc?.q?.length > 0) {
       const q = (window as any)?.nc?.q;
+
       q.forEach((a: Array<string>) => {
         const [event, ...tags] = [...a];
         this.track(event, ...tags);
       });
 
+      /* 
       // For users load time statistics
-      //const t = (window as any)?.nc?.t;
-      //this.track("userInitTime", t);
+      const t = (window as any)?.nc?.t;
+      this.track("userInitTime", t);
+      */
     }
 
     this.beforeCloseBrowser = () => {
       if (this.buffer.length > 0) {
-        console.log(">>> beforeCloseBrowser");
-        this.pushTracks("text/plain"); // to avoid additional "OPTIONS" requests
+        // to avoid additional preflight "OPTIONS" request
+        this.pushTracks("text/plain");
       }
     };
     this.beforeHiddenBrowser = () => {
@@ -67,11 +72,6 @@ class Tracker implements Tracker {
     window.addEventListener("beforeunload", this.beforeCloseBrowser);
   }
 
-  remove() {
-    document.removeEventListener("visibilitychange", this.beforeHiddenBrowser);
-    window.removeEventListener("beforeunload", this.beforeCloseBrowser);
-  }
-
   prepareObject(event: string, ...tags: string[]) {
     return {
       event,
@@ -82,13 +82,9 @@ class Tracker implements Tracker {
     };
   }
 
-  resetPushTimeout() {
-    clearTimeout(this.pushTimeout);
-    this.pushTimeout = undefined;
-  }
-  resetIssueTimeout() {
-    clearTimeout(this.issueTimeout);
-    this.issueTimeout = undefined;
+  resetTimeout(methodName: PushTypes) {
+    clearTimeout(this[methodName]);
+    this[methodName] = undefined;
   }
   resetLastPushTime() {
     this.lastPushTime = new Date().getTime();
@@ -123,41 +119,33 @@ class Tracker implements Tracker {
       }
     } catch (error) {
       this.issueBuffer.push(...this.buffer);
-      this.setIssuePushTimeout();
+      this.setFunctionTimeout("issueTimeout");
     }
 
     this.resetLastPushTime();
     this.resetBuffer();
-    this.resetPushTimeout();
+    this.resetTimeout("pushTimeout");
   }
 
-  setIssuePushTimeout() {
-    console.log(`IssueBuffer size: ${this.issueBuffer.length}`);
+  setFunctionTimeout(methodName: PushTypes) {
+    console.log(
+      `Buffer size: ${this[methodName === "pushTimeout" ? "buffer" : "issueBuffer"]?.length}`
+    );
 
-    if (typeof this.issueTimeout !== "undefined") {
+    if (typeof this[methodName] !== "undefined") {
       return;
     }
 
-    this.issueTimeout = setTimeout(() => {
-      this.buffer.push(...this.issueBuffer);
+    this[methodName] = setTimeout(() => {
+      if (methodName === "issueTimeout") {
+        this.buffer.push(...this.issueBuffer);
 
-      this.resetIssueBuffer();
-      this.resetIssueTimeout();
+        this.resetIssueBuffer();
+        this.resetTimeout(methodName);
+      }
 
       this.pushTracks();
     }, this.throttleInterval);
-  }
-  setPushTimeout() {
-    //console.log(`buffer size: ${this.buffer.length}`);
-
-    if (typeof this.pushTimeout !== "undefined") {
-      return;
-    }
-
-    this.pushTimeout = setTimeout(
-      () => this.pushTracks(),
-      this.throttleInterval,
-    );
   }
 
   track(event: string, ...tags: string[]) {
@@ -181,7 +169,7 @@ class Tracker implements Tracker {
     if (isPushTracks) {
       this.pushTracks();
     } else {
-      this.setPushTimeout();
+      this.setFunctionTimeout("pushTimeout");
     }
   }
 }

@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 export const startServer = (
   server: FastifyInstance,
-  portKeyName: keyof typeof envPorts,
+  portKeyName: keyof typeof envPorts
 ) => {
   server.listen({ port: server.config[portKeyName] }, async (err, address) => {
     if (err) {
@@ -13,7 +13,9 @@ export const startServer = (
     }
 
     try {
+      // Disable default filtering properties that are not in the schema
       mongoose.set("strictQuery", false);
+
       if (!mongoose.connection.readyState) {
         await mongoose.connect(process.env.MONGO_URL as string);
         console.log(">>> MongoDB connected");

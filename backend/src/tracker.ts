@@ -129,7 +129,7 @@ class Tracker implements Tracker {
 
   setFunctionTimeout(methodName: PushTypes) {
     console.log(
-      `Buffer size: ${this[methodName === "pushTimeout" ? "buffer" : "issueBuffer"]?.length}`
+      `Buffer size: ${this[methodName === "pushTimeout" ? "buffer" : "issueBuffer"]?.length}`,
     );
 
     if (typeof this[methodName] !== "undefined") {

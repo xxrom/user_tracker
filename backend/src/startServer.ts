@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 export const startServer = (
   server: FastifyInstance,
-  portKeyName: keyof typeof envPorts
+  portKeyName: keyof typeof envPorts,
 ) => {
   server.listen({ port: server.config[portKeyName] }, async (err, address) => {
     if (err) {

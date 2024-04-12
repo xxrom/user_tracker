@@ -62,3 +62,5 @@ Backend:
 - mongoDB
 - mongoose
 - prettier
+
+# images

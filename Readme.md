@@ -44,8 +44,16 @@ PORT1=50000
 
 ## How to run project
 
+- dev mode
+
 ```
 yarn dev
+```
+
+- prod mode
+
+```
+yarn build && yarn start
 ```
 
 Navigate to [http://localhost:3000/1.html](http://localhost:3000/1.html)

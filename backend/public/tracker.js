@@ -44,7 +44,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 var SERVER_URL = "http://localhost:8888/track";
-var THROTTLE_SECONDS = 10;
+var THROTTLE_SECONDS = 1;
 var BUFFER_MAX_SIZE = 3;
 var Tracker = /** @class */ (function () {
     function Tracker() {

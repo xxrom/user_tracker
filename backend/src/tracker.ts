@@ -1,5 +1,5 @@
 const SERVER_URL = "http://localhost:8888/track";
-const THROTTLE_SECONDS = 10;
+const THROTTLE_SECONDS = 1;
 const BUFFER_MAX_SIZE = 3;
 
 type TrackType = {

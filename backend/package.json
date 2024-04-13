@@ -9,7 +9,7 @@
     "start": "node dist/index.js",
     "dev:server": "ts-node-dev src/index.ts --watch",
     "dev:tracker": "tsc src/tracker.ts --outDir public/ --watch",
-    "dev": "concurrently --kill-others-on-fail \"yarn dev:server\" \"yarn dev:tracker\"",
+    "dev": "concurrently \"yarn dev:server\" \"yarn dev:tracker\"",
     "lint": "prettier --check .",
     "lint:fix": "prettier --write .",
     "mongo:start": "docker compose up -d",

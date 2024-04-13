@@ -36,12 +36,12 @@ export function DataTable<TData, TValue>({
   return (
     <div className={`grid overflow-scroll rounded-md border ${className}`}>
       <Table>
-        <TableHeader className="sticky top-0 bg-purple-100">
+        <TableHeader className="sticky top-0 bg-purple-600">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} className="text-white">
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -56,13 +56,14 @@ export function DataTable<TData, TValue>({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
+            table.getRowModel().rows.map((row, index) => (
               <TableRow
                 key={row.id}
+                className={index % 2 === 0 ? "bg-slate-200" : "bg-slate-50"}
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell className="p-1" key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

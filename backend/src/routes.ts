@@ -28,4 +28,15 @@ export const addRoutes = (server: FastifyInstance) => {
       return reply.status(422).send({ ok: false, error });
     }
   });
+
+  server.get("/track", async (request, reply) => {
+    try {
+      const allTracks = await Track.find({});
+
+      return reply.status(200).send({ ok: true, data: allTracks });
+    } catch (error) {
+      console.error("error", error);
+      return reply.status(422).send({ ok: false, error });
+    }
+  });
 };

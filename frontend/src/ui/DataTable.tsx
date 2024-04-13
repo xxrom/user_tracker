@@ -36,7 +36,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className={`grid overflow-scroll rounded-md border ${className}`}>
       <Table>
-        <TableHeader>
+        <TableHeader className="sticky top-0 bg-purple-100">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {

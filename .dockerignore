@@ -1,0 +1,15 @@
+mongo-volume
+
+**/*.md
+**/node_modules/
+#**/tsconfig.json
+**/dist
+**/.next/cache
+.git
+**/npm-debug.log
+.env
+.husky
+
+# Ignore source source file , because we need only build folder after compilation
+#backend/src/**/*.ts 
+#backend/src/**/*.tsx

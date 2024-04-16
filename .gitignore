@@ -4,4 +4,5 @@
 **/mongo-volume/
 
 **/.env
+**/.env.docker
 **/.DS_Store

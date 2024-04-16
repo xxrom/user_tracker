@@ -24,6 +24,7 @@
     "@fastify/env": "^4.3.0",
     "@fastify/static": "^7.0.3",
     "dotenv": "^8.6.0",
+    "dotenv-cli": "^7.4.1",
     "fastify": "^4.24.3",
     "mongoose": "^6.12.3",
     "pino-pretty": "^10.2.0",

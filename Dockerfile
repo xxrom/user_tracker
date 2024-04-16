@@ -11,18 +11,9 @@ COPY yarn.lock ./
 COPY ./frontend/package*.json ./frontend/
 COPY ./backend/package*.json ./backend/
 
-ARG PORT
-ARG PORT0
-ARG PORT1
-ENV PORT=$PORT
-ENV PORT0=$PORT0
-ENV PORT1=$PORT1
-
-# Disable Next telemetry
-ENV NEXT_TELEMETRY_DISABLED=1
-
 # Install app dependencies
-RUN yarn install --pure-lockfile --production
+RUN yarn install --pure-lockfile 
+# --production=false
 
 # Bundle app source
 COPY . .
@@ -33,6 +24,15 @@ COPY . .
 # Switch user
 #USER node
 
+ARG PORT
+ARG PORT0
+ARG PORT1
+ENV PORT=$PORT
+ENV PORT0=$PORT0
+ENV PORT1=$PORT1
+
+# Disable Next telemetry
+ENV NEXT_TELEMETRY_DISABLED=1
 # EXPOSE instruction to have it mapped by the docker daemon
 EXPOSE $PORT
 EXPOSE $PORT0

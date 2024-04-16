@@ -1,0 +1,52 @@
+services:
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: ./Dockerfile
+  #   env_file:
+  #     - ./frontend/.env
+  #   ports:
+  #     - "6070:6070"
+
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: ./Dockerfile
+  #   env_file:
+  #     - ./backend/.env
+  #   ports:
+  #     - "6071:6075"
+  #     - "6072:6076"
+
+  monorepo:
+    container_name: users_logs_monorepo
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    env_file:
+      - ./frontend/.env.docker
+      - ./backend/.env.docker
+    ports:
+      - "6070:6070"
+      - "6075:6075"
+      - "6076:6076"
+    networks:
+      - app-network
+
+  mongodb:
+    image: mongo:latest
+    restart: always
+    container_name: users_logs_mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - ./mongo-volume:/data/db
+    ports:
+      - "6079:27017"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

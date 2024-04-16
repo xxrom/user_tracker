@@ -19,7 +19,7 @@ It is designed to capture and analyze user interactions on websites, providing i
 ### Prerequisites
 
 - Node.js (v18 or newer recommended)
-- MongoDB (or use docker compose in backend project `yarn mongo:start`)
+- MongoDB
 - yarn
 
 ## How to clone and install

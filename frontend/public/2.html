@@ -16,7 +16,7 @@
         myScript.async = 1;
         myScript.src = src;
         firstScript.parentNode.insertBefore(myScript, firstScript); // insert script before firstScript
-      })("nc", "http://localhost:8888/tracker");
+      })("nc", "http://localhost:6075/tracker");
 
       nc("open", "pageview");
       nc("test", "one", "two", "three");

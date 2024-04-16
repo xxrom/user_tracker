@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "PORT=6070 next dev",
     "build": "next build",
     "start": "next start",
+    "prod": "yarn build && yarn start",
     "lint": "prettier --check .",
     "lint:fix": "prettier --write ."
   },
@@ -18,7 +19,8 @@
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "^2.2.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^5"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -29,7 +31,6 @@
     "eslint-config-next": "14.1.4",
     "postcss": "^8.4.38",
     "prettier": "^3.2.5",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "tailwindcss": "^3.4.1"
   }
 }

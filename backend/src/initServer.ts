@@ -17,11 +17,11 @@ declare module "fastify" {
 export const envPorts = {
   PORT0: {
     type: "number",
-    default: 8889,
+    default: 8888,
   },
   PORT1: {
     type: "number",
-    default: 50001,
+    default: 50000,
   },
 };
 const envSchema = {

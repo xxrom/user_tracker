@@ -1,4 +1,5 @@
-const SERVER_URL = "http://localhost:8888/track";
+const SERVER_URL = `http://localhost:%%PORT0%%/track`;
+console.log("URL", SERVER_URL);
 const THROTTLE_SECONDS = 1;
 const BUFFER_MAX_SIZE = 3;
 
@@ -36,10 +37,10 @@ class Tracker implements Tracker {
   constructor() {
     this.throttleInterval = THROTTLE_SECONDS * 1000;
     this.pushBufferMaxSize = BUFFER_MAX_SIZE;
+    this.lastPushTime = 0;
 
     this.resetBuffer();
     this.resetIssueBuffer();
-    this.resetLastPushTime();
 
     if ((window as any)?.nc?.q?.length > 0) {
       const q = (window as any).nc.q;
@@ -49,11 +50,9 @@ class Tracker implements Tracker {
         this.track(event, ...tags);
       });
 
-      /* 
       // For users load time statistics
       const t = (window as any)?.nc?.t;
       this.track("userInitTime", t);
-      */
     }
 
     this.beforeCloseBrowser = () => {
@@ -97,14 +96,16 @@ class Tracker implements Tracker {
   }
 
   async pushTracks(contentType = "application/json") {
-    if (this.buffer.length === 0) {
-      return;
-    }
+    const currentBuffer = [...this.buffer];
 
     try {
+      this.resetLastPushTime();
+      this.resetBuffer();
+      this.resetTimeout("pushTimeout");
+
       const res = await fetch(SERVER_URL, {
         body: JSON.stringify({
-          tracks: this.buffer,
+          tracks: currentBuffer,
         }),
         headers: {
           "Content-Type": contentType,
@@ -116,19 +117,28 @@ class Tracker implements Tracker {
         throw Error("Not valid server status response");
       }
     } catch (error) {
-      this.issueBuffer.push(...this.buffer);
+      this.issueBuffer.push(...currentBuffer);
       this.setFunctionTimeout("issueTimeout");
     }
-
-    this.resetLastPushTime();
-    this.resetBuffer();
-    this.resetTimeout("pushTimeout");
   }
 
   setFunctionTimeout(timeoutType: TimeoutTypes) {
     if (typeof this[timeoutType] !== "undefined") {
       return;
     }
+
+    const getTimeoutMs = () => {
+      if (timeoutType === "issueTimeout") {
+        return this.throttleInterval;
+      }
+
+      const currentTime = new Date().getTime();
+      const timeDiff = currentTime - this.lastPushTime;
+
+      return timeDiff < this.throttleInterval
+        ? this.throttleInterval - timeDiff
+        : this.throttleInterval;
+    };
 
     this[timeoutType] = setTimeout(() => {
       if (timeoutType === "issueTimeout") {
@@ -139,17 +149,12 @@ class Tracker implements Tracker {
       }
 
       this.pushTracks();
-    }, this.throttleInterval);
+    }, getTimeoutMs());
   }
 
   track(event: string, ...tags: string[]) {
     const track = this.prepareObject(event, ...tags);
     const currentTime = new Date().getTime();
-    const isFirstTrack = this.buffer.length === 0;
-
-    if (isFirstTrack) {
-      this.lastPushTime = currentTime;
-    }
 
     this.buffer.push(track);
 

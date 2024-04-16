@@ -26,7 +26,7 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
-        <div className="grid grid-cols-[1fr] sm:grid-cols-[600px] w-full sm:w-fit justify-self-center overflow-scroll p-4 pt-8 sm:p-8">
+        <div className="grid grid-cols-[1fr] w-full md:max-w-[900px] justify-self-center overflow-scroll p-4 pt-8 sm:p-8">
           {children}
         </div>
       </body>

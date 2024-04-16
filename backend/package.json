@@ -12,7 +12,8 @@
     "prod": "yarn build && yarn build:tracker && yarn start",
     "dev:server": "ts-node-dev src/index.ts --watch",
     "dev:tracker": "tsc src/tracker.ts --outDir public/ --watch",
-    "dev": "concurrently \"yarn dev:server\" \"yarn dev:tracker\"",
+    "dev:mongo": "docker compose up -d",
+    "dev": "concurrently \"yarn dev:server\" \"yarn dev:mongo && yarn dev:tracker\"",
     "lint": "prettier --check .",
     "lint:fix": "prettier --write ."
   },

@@ -2,7 +2,7 @@ import { DataTable } from "@/ui";
 import { TrackType, columns } from "./columns";
 
 const getData = async (): Promise<{ data: Array<TrackType> }> =>
-  fetch(`http://0.0.0.0:${process.env.NEXT_PUBLIC_SERVER_PORT0}/track`, {
+  fetch(`http://utb:${process.env.NEXT_PUBLIC_SERVER_PORT0}/track`, {
     next: { revalidate: 1 },
   }).then((res) => res.json());
 

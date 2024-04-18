@@ -25,7 +25,7 @@ export const startServer = (
       } catch (error) {
         console.error("MongoDB connect issue url: ", server.config.MONGO_URL);
         console.error("MongoDB connect issue: ", error);
-        process.exit(1);
+        //process.exit(1);
       }
 
       console.log(`>>> Server listening at ${address}`);

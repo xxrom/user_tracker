@@ -13,8 +13,7 @@
     "dev:server": "ts-node-dev src/index.ts --watch",
     "dev:tracker": "tsc src/tracker.ts --outDir generated/ --watch",
     "dev:tracker-env": "nodemon --exec 'yarn build:tracker-env' --ignore public/tracker.js generated/*",
-    "dev:mongo": "docker compose up -d",
-    "dev": "concurrently \"sleep 2 && yarn dev:server\" \"yarn dev:mongo && yarn dev:tracker\" \"yarn dev:tracker-env\"",
+    "dev": "concurrently \"sleep 2 && yarn dev:server\" \"yarn dev:tracker\" \"yarn dev:tracker-env\"",
     "lint": "prettier --check .",
     "lint:fix": "prettier --write ."
   },

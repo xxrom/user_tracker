@@ -1,4 +1,7 @@
-package-lock.json
-yarn.lock
-node_modules
-public
+**/package-lock.json
+**/yarn.lock
+**/node_modules
+**/public
+**/generated
+**/dist
+**/.next

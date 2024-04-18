@@ -43,19 +43,20 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
-var SERVER_URL = "http://localhost:%%PORT0%%/track";
-console.log("URL", SERVER_URL);
-var THROTTLE_SECONDS = 1;
+var SERVER_URL = "http://localhost:6075/track";
+var THROTTLE_SECONDS = 10;
 var BUFFER_MAX_SIZE = 3;
 var Tracker = /** @class */ (function () {
     function Tracker() {
-        var _this = this;
-        var _a, _b, _c;
         this.throttleInterval = THROTTLE_SECONDS * 1000;
         this.pushBufferMaxSize = BUFFER_MAX_SIZE;
         this.lastPushTime = 0;
         this.resetBuffer();
         this.resetIssueBuffer();
+    }
+    Tracker.prototype.init = function () {
+        var _this = this;
+        var _a, _b, _c;
         if (((_b = (_a = window === null || window === void 0 ? void 0 : window.nc) === null || _a === void 0 ? void 0 : _a.q) === null || _b === void 0 ? void 0 : _b.length) > 0) {
             var q = window.nc.q;
             q.forEach(function (a) {
@@ -63,13 +64,12 @@ var Tracker = /** @class */ (function () {
                 _this.track.apply(_this, __spreadArray([event], tags, false));
             });
             // For users load time statistics
-            var t = (_c = window === null || window === void 0 ? void 0 : window.nc) === null || _c === void 0 ? void 0 : _c.t;
-            this.track("userInitTime", t);
+            var time = (_c = window === null || window === void 0 ? void 0 : window.nc) === null || _c === void 0 ? void 0 : _c.t;
+            this.track("userInitTime", time.toString());
         }
         this.beforeCloseBrowser = function () {
             if (_this.buffer.length > 0) {
-                // to avoid additional preflight "OPTIONS" request
-                _this.pushTracks("text/plain");
+                _this.sendBeacon();
             }
         };
         this.beforeHiddenBrowser = function () {
@@ -79,7 +79,18 @@ var Tracker = /** @class */ (function () {
         };
         document.addEventListener("visibilitychange", this.beforeHiddenBrowser);
         window.addEventListener("beforeunload", this.beforeCloseBrowser);
-    }
+    };
+    Tracker.prototype.sendBeacon = function () {
+        var body = JSON.stringify({
+            tracks: this.buffer,
+        });
+        if (navigator.sendBeacon) {
+            navigator.sendBeacon(SERVER_URL, body);
+        }
+        else {
+            fetch(SERVER_URL, { body: body, method: "POST", keepalive: true });
+        }
+    };
     Tracker.prototype.prepareObject = function (event) {
         var tags = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -87,7 +98,7 @@ var Tracker = /** @class */ (function () {
         }
         return {
             event: event,
-            tags: tags ? tags : [],
+            tags: tags,
             title: document.title,
             ts: Math.floor(new Date().getTime() / 1000), // in seconds
             url: window.location.href,
@@ -107,10 +118,9 @@ var Tracker = /** @class */ (function () {
         this.issueBuffer = [];
     };
     Tracker.prototype.pushTracks = function () {
-        return __awaiter(this, arguments, void 0, function (contentType) {
+        return __awaiter(this, void 0, void 0, function () {
             var currentBuffer, res, error_1;
             var _a;
-            if (contentType === void 0) { contentType = "application/json"; }
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -126,7 +136,7 @@ var Tracker = /** @class */ (function () {
                                     tracks: currentBuffer,
                                 }),
                                 headers: {
-                                    "Content-Type": contentType,
+                                    "Content-Type": "text/plain",
                                 },
                                 method: "POST",
                             })];
@@ -192,3 +202,4 @@ var Tracker = /** @class */ (function () {
     return Tracker;
 }());
 window.tracker = new Tracker();
+window.tracker.init();

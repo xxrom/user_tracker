@@ -2,21 +2,23 @@
   <head>
     <title>My website</title>
     <script>
-      (function (method, src) {
+      (function (w, d, m, s, src, myScript, firstScript) {
         // Init queue for storing all events, before main script is loaded
-        window[method] = function () {
-          window[method].q.push(arguments);
+        w[m] = function () {
+          w[m].q.push(arguments);
         };
-        window[method].q = window[method].q || [];
-        window[method].t = new Date().getTime();
+        w[m].q = w[m].q || [];
+        w[m].t = new Date().getTime();
 
         // Add my <script /> at first place
-        myScript = document.createElement("script");
-        firstScript = document.getElementsByTagName("script")[0];
+        myScript = d.createElement(s);
         myScript.async = 1;
         myScript.src = src;
-        firstScript.parentNode.insertBefore(myScript, firstScript); // insert script before firstScript
-      })("nc", "http://192.168.77.10:6075/tracker");
+
+        // insert myScript before firstScript
+        firstScript = d.getElementsByTagName(s)[0];
+        firstScript.parentNode.insertBefore(myScript, firstScript);
+      })(window, document, "nc", "script", "http://0.0.0.0:6075/tracker");
 
       nc("open", "pageview");
       nc("test", "one", "two", "three");

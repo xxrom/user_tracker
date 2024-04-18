@@ -11,3 +11,8 @@ services:
       - ../mongo-volume:/data/db
     ports:
       - "27017:27017"
+    networks:
+      - mongodb-network
+
+networks:
+  mongodb-network:

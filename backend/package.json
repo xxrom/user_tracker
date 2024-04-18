@@ -5,15 +5,16 @@
   "main": "index.js",
   "scripts": {
     "build:server": "tsc -p tsconfig.json",
-    "build:tracker": "tsc src/tracker.ts --outDir public/",
+    "build:tracker": "tsc src/tracker.ts --outDir generated/",
     "build:tracker-env": "dotenv -e .env -- node ./scripts/public-tracker-env.js",
-    "build": "yarn build:server && yarn build:tracker && yarn build:tracker-env",
+    "build": "yarn build:tracker && yarn build:tracker-env && yarn build:server",
     "start": "node dist/index.js",
-    "prod": "yarn build && yarn build:tracker && yarn start",
+    "prod": "yarn build && yarn start",
     "dev:server": "ts-node-dev src/index.ts --watch",
-    "dev:tracker": "tsc src/tracker.ts --outDir public/ --watch",
+    "dev:tracker": "tsc src/tracker.ts --outDir generated/ --watch",
+    "dev:tracker-env": "nodemon --exec 'yarn build:tracker-env' --ignore public/tracker.js generated/*",
     "dev:mongo": "docker compose up -d",
-    "dev": "concurrently \"yarn dev:server\" \"yarn dev:mongo && yarn dev:tracker\"",
+    "dev": "concurrently \"sleep 2 && yarn dev:server\" \"yarn dev:mongo && yarn dev:tracker\" \"yarn dev:tracker-env\"",
     "lint": "prettier --check .",
     "lint:fix": "prettier --write ."
   },
@@ -28,8 +29,10 @@
     "dotenv-cli": "^7.4.1",
     "fastify": "^4.24.3",
     "mongoose": "^6.12.3",
+    "nodemon": "^2.0.22",
     "pino-pretty": "^10.2.0",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.3",
+    "concurrently": "^8.2.2"
   },
   "devDependencies": {
     "@types/node": "^20.9.4",

@@ -1,6 +1,6 @@
 const SERVER_URL = `http://localhost:%%PORT0%%/track`;
-console.log("URL", SERVER_URL);
-const THROTTLE_SECONDS = 1;
+
+const THROTTLE_SECONDS = 10;
 const BUFFER_MAX_SIZE = 3;
 
 type TrackType = {
@@ -41,9 +41,11 @@ class Tracker implements Tracker {
 
     this.resetBuffer();
     this.resetIssueBuffer();
+  }
 
-    if ((window as any)?.nc?.q?.length > 0) {
-      const q = (window as any).nc.q;
+  init() {
+    if (window?.nc?.q?.length > 0) {
+      const q = window.nc.q;
 
       q.forEach((a: Array<string>) => {
         const [event, ...tags] = [...a];
@@ -51,14 +53,13 @@ class Tracker implements Tracker {
       });
 
       // For users load time statistics
-      const t = (window as any)?.nc?.t;
-      this.track("userInitTime", t);
+      const time = window?.nc?.t;
+      this.track("userInitTime", time.toString());
     }
 
     this.beforeCloseBrowser = () => {
       if (this.buffer.length > 0) {
-        // to avoid additional preflight "OPTIONS" request
-        this.pushTracks("text/plain");
+        this.sendBeacon();
       }
     };
     this.beforeHiddenBrowser = () => {
@@ -71,10 +72,22 @@ class Tracker implements Tracker {
     window.addEventListener("beforeunload", this.beforeCloseBrowser);
   }
 
-  prepareObject(event: string, ...tags: string[]) {
+  sendBeacon() {
+    const body = JSON.stringify({
+      tracks: this.buffer,
+    });
+
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(SERVER_URL, body);
+    } else {
+      fetch(SERVER_URL, { body, method: "POST", keepalive: true });
+    }
+  }
+
+  prepareObject(event: string, ...tags: string[]): TrackType {
     return {
       event,
-      tags: tags ? tags : [],
+      tags,
       title: document.title,
       ts: Math.floor(new Date().getTime() / 1000), // in seconds
       url: window.location.href,
@@ -95,7 +108,7 @@ class Tracker implements Tracker {
     this.issueBuffer = [];
   }
 
-  async pushTracks(contentType = "application/json") {
+  async pushTracks() {
     const currentBuffer = [...this.buffer];
 
     try {
@@ -108,7 +121,7 @@ class Tracker implements Tracker {
           tracks: currentBuffer,
         }),
         headers: {
-          "Content-Type": contentType,
+          "Content-Type": "text/plain",
         },
         method: "POST",
       });
@@ -171,4 +184,12 @@ class Tracker implements Tracker {
   }
 }
 
-(window as any).tracker = new Tracker();
+interface Window {
+  tracker: Tracker;
+  nc: {
+    q: Array<any>;
+    t: number;
+  };
+}
+window.tracker = new Tracker();
+window.tracker.init();

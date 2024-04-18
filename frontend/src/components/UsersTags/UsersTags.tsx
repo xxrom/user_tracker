@@ -3,7 +3,7 @@ import { TrackType, columns } from "./columns";
 
 const getData = async (): Promise<{ data: Array<TrackType> }> =>
   fetch(`http://0.0.0.0:${process.env.NEXT_PUBLIC_SERVER_PORT0}/track`, {
-    next: { revalidate: 10 },
+    next: { revalidate: 1 },
   }).then((res) => res.json());
 
 export const UsersTags = async () => {

@@ -1,5 +1,5 @@
 # Select base image
-FROM node:20-alpine
+FROM node:21-alpine as builder
 
 # Create app directory in Docker
 WORKDIR /app
@@ -8,11 +8,19 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install app dependencies
-RUN yarn install 
-# --pure-lockfile 
-# --production=false
+RUN yarn install --pure-lockfile --production=false --no-cache
+
+# Clear the Yarn cache to free up space
+RUN yarn cache clean
+
+# Production stage
+FROM node:21-alpine
+WORKDIR /app
+
+COPY --from=builder /app/node_modules ./node_modules
 
 # Bundle app source
+COPY package*.json ./
 COPY ./src ./src
 COPY ./scripts ./scripts
 COPY ./tsconfig* ./

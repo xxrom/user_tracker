@@ -11,3 +11,28 @@
 `docker network inspect custom-network`
 
 - check "containers" object for connected containers and there names
+
+## to use it inside dockerfile
+
+````
+# add it to any services
+...
+    networks:
+      - custom-network
+
+...
+
+# init network
+networks:
+  custom-network:
+    driver: bridge
+    external: true
+
+```
+
+## how to inspect network
+
+`docker network inspect custom-network`
+
+Check `containers` object for connected containers to network
+````

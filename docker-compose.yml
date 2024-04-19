@@ -1,23 +1,4 @@
 services:
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: ./Dockerfile
-  #   env_file:
-  #     - ./frontend/.env
-  #   ports:
-  #     - "6070:6070"
-
-  # backend:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: ./Dockerfile
-  #   env_file:
-  #     - ./backend/.env
-  #   ports:
-  #     - "6071:6075"
-  #     - "6072:6076"
-
   monorepo:
     container_name: users_logs_monorepo
     build:

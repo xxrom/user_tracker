@@ -1,7 +1,6 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUp, ArrowDown } from "lucide-react";
 
 export type TrackType = {
   event: string;
@@ -40,7 +39,7 @@ export const columns: ColumnDef<TrackType>[] = [
         >
           <div className="flex">
             Time:
-            {column.getIsSorted() === "asc" ? <ArrowUp /> : <ArrowDown />}
+            {column.getIsSorted() === "asc" ? "^" : "v"}
           </div>
         </button>
       );

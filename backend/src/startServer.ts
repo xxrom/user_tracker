@@ -9,7 +9,7 @@ export const startServer = (
   server.listen(
     {
       port: server.config[portKeyName],
-      //  host: "0.0.0.0"
+      host: "0.0.0.0",
     },
     async (err, address) => {
       if (err) {

@@ -1,7 +1,7 @@
 const fs = require("fs");
 
 // Read env
-const envValue = "SERVER_URL";
+const envValue = "NEXT_PUBLIC_SERVER_URL";
 const serverUrl = process.env[envValue];
 const envPort0Value = "NEXT_PUBLIC_SERVER_PORT0";
 const serverPort0 = process.env[envPort0Value];

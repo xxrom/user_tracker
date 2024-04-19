@@ -4,7 +4,7 @@ import { memo, useEffect } from "react";
 import { revalidateTable } from "../../actions/tableActions";
 import { Button } from "@/ui/button";
 
-const REVALIDATE_INTERVAL = 10 * 1000; // 1 min auto updates
+const REVALIDATE_INTERVAL = 10 * 1000; // 10 sec auto updates
 
 export const UpdateButton = memo(() => {
   const revalidateAll = () => {

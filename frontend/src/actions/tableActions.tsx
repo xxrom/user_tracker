@@ -8,13 +8,15 @@ const tableTag = "table-data";
 export const getData = async (): Promise<{ data: Array<TrackType> }> => {
   "use server";
   try {
-    return fetch(
+    const data = await fetch(
       `http://${process.env.SERVER_URL}:${process.env.NEXT_PUBLIC_SERVER_PORT0}/track`,
       {
         cache: "no-store",
         next: { tags: [tableTag] },
       },
-    ).then((res) => res.json());
+    );
+
+    return data.json();
   } catch (err) {
     console.error(err);
   }

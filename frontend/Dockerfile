@@ -1,24 +1,32 @@
 # Select base image
-FROM node:20-alpine
+FROM node:21-alpine as builder
 
-# Create app directory in Docker
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+COPY package.json ./
 
-# Install app dependencies
-RUN yarn install 
-# --pure-lockfile 
-# --production=false
+RUN yarn install --frozen-lockfile --production=false
 
-# Bundle app source
-COPY ./src ./src
-COPY ./public ./public
-COPY ./tsconfig* ./
-COPY ./next* ./
-COPY ./tailwind* ./
-COPY ./postcss* ./
+# Clear the Yarn cache to free up space
+RUN yarn cache clean
+#RUN rm -rf /usr/local/share/.cache/yarn
+
+# Production stage
+FROM node:21-alpine
+
+WORKDIR /app
+
+COPY --from=builder /app/node_modules ./node_modules
+
+COPY package.json ./
+COPY src ./src
+COPY init ./init
+COPY scripts ./scripts
+COPY public ./public
+COPY tsconfig.json ./
+COPY next.config.mjs ./
+COPY tailwind.config.js ./
+COPY postcss.config.js ./
 
 # After copying your application code into the image
 #RUN chown -R node:node /app

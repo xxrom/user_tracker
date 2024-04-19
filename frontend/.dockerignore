@@ -1,0 +1,11 @@
+**/mongo-volume
+
+**/*.md
+**/node_modules/
+**/dist
+**/.next/cache
+**/.git
+**/npm-debug.log
+**/.env*
+**/.husky
+

@@ -30,7 +30,9 @@ export function DataTable<TData, TValue>({
   data,
   className,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: "ts", desc: true },
+  ]);
 
   const table = useReactTable({
     data,
@@ -51,7 +53,10 @@ export function DataTable<TData, TValue>({
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id} className="px-4 text-white">
+                  <TableHead
+                    key={header.id}
+                    className="px-2 sm:px-4 text-white"
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -73,7 +78,10 @@ export function DataTable<TData, TValue>({
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell className="p-1 px-4 whitespace-pre" key={cell.id}>
+                  <TableCell
+                    className="py-0 sm:py-1 px-2 sm:px-4 whitespace-pre"
+                    key={cell.id}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

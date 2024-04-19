@@ -28,6 +28,10 @@ export const columns: ColumnDef<TrackType>[] = [
     header: "Title",
   },
   {
+    accessorKey: "url",
+    header: "URL",
+  },
+  {
     accessorKey: "ts", // Time
     header: ({ column }) => {
       return (
@@ -44,9 +48,5 @@ export const columns: ColumnDef<TrackType>[] = [
     cell: ({ getValue }) => {
       return <div>{new Date((getValue() as number) * 1000).toUTCString()}</div>;
     },
-  },
-  {
-    accessorKey: "url",
-    header: "URL",
   },
 ];

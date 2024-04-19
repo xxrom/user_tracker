@@ -7,7 +7,10 @@ export const startServer = (
   portKeyName: keyof typeof envPorts,
 ) => {
   server.listen(
-    { port: server.config[portKeyName], host: "0.0.0.0" },
+    {
+      port: server.config[portKeyName],
+      //  host: "0.0.0.0"
+    },
     async (err, address) => {
       if (err) {
         console.error(err);

@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "PORT=6070 next dev",
-    "build": "next build",
+    "build:html-env": "dotenv -e .env.docker -- node ./scripts/public-html-env.js",
+    "build": "yarn build:html-env && next build",
+    "dev:html-env": "nodemon --exec 'dotenv -e .env -- node ./scripts/public-html-env.js' --ignore 'public/*.html' --watch init/*.html --watch scripts/*.js",
+    "dev": "concurrently \"yarn dev:html-env\" \"dotenv -e .env -- next dev\"",
     "start": "next start",
     "prod": "yarn build && yarn start",
     "lint": "prettier --check .",
@@ -20,6 +22,7 @@
     "react-dom": "^18",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
+    "nodemon": "^2.0.22",
     "typescript": "^5"
   },
   "devDependencies": {

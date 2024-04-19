@@ -18,7 +18,13 @@
         // insert myScript before firstScript
         firstScript = d.getElementsByTagName(s)[0];
         firstScript.parentNode.insertBefore(myScript, firstScript);
-      })(window, document, "nc", "script", "http://utb:6075/tracker");
+      })(
+        window,
+        document,
+        "nc",
+        "script",
+        "http://%%SERVER_URL%%:%%NEXT_PUBLIC_SERVER_PORT0%%/tracker",
+      );
 
       nc("open", "pageview");
       nc("test", "one", "two", "three");

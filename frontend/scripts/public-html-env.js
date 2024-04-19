@@ -1,20 +1,28 @@
 const fs = require("fs");
 
 // Read env
-const port0 = process.env.PORT0;
+const envValue = "SERVER_URL";
+const serverUrl = process.env[envValue];
+const envPort0Value = "NEXT_PUBLIC_SERVER_PORT0";
+const serverPort0 = process.env[envPort0Value];
 
 // Init values
-const fileName = "1.html";
-const initPath = `./init/${fileName}`;
-const publicFolder = "./public";
-const finalPath = `${publicFolder}/${fileName}`;
+const fileNames = ["1.html", "2.html", "3.html"];
 
-// Read file
-let script = fs.readFileSync(initPath, "utf8");
-// Insert into file env values
-script = script.replace("%%SERVER_URL%%", port0);
+fileNames.forEach((fileName) => {
+  const initFolder = "./init";
+  const initPath = `${initFolder}/${fileName}`;
+  const publicFolder = "./public";
+  const finalPath = `${publicFolder}/${fileName}`;
 
-// create folder
-fs.mkdirSync(publicFolder, { recursive: true });
-// create new file
-fs.writeFileSync(finalPath, script);
+  // Read file
+  let file = fs.readFileSync(initPath, "utf8");
+  // Insert into file env values
+  file = file.replace(`%%${envValue}%%`, serverUrl);
+  file = file.replace(`%%${envPort0Value}%%`, serverPort0);
+
+  // create folder
+  fs.mkdirSync(publicFolder, { recursive: true });
+  // create new file
+  fs.writeFileSync(finalPath, file);
+});

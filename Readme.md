@@ -58,6 +58,11 @@ yarn build && yarn start
 
 Navigate to [http://localhost:3000/1.html](http://localhost:3000/1.html)
 
+## k3s deploy
+
+check all deployments
+`kubectl get deployments --all-namespaces`
+
 ## Tech stack:
 
 - yarn monorepo

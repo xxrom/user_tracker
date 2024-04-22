@@ -11,10 +11,10 @@ services:
       - ../mongo-volume:/data/db
     ports:
       - 27017:27017
-    networks:
-      - custom-network
+#     networks:
+#       - custom-network
 
-networks:
-  custom-network:
-    driver: bridge
-    external: true
+# networks:
+#   custom-network:
+#     driver: bridge
+#     external: true

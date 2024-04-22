@@ -1,5 +1,21 @@
-docker:
-	docker build -t users-tracker-frontend:latest . 
+# 0
+docker-login: # admin 1-!
+	sudo docker login 192.168.77.150:8044 
 
+# local
 docker-run:
-	docker run --name utf --env-file ./.env.docker --rm -p 6070:6070 --network=custom-network users-tracker-frontend
+	docker run --name utf --env-file ./.env.docker --rm -p 6070:6070 --network=ut-network ut-front
+
+# 1
+docker:
+	docker build -t ut-front:latest . 
+# 2
+docker-tag:
+	docker tag ut-front 192.168.77.150:8044/library/ut-front:latest
+# 3
+docker-push:
+	docker push 192.168.77.150:8044/library/ut-front:latest
+
+# build - tag - push
+docker-all:
+	make docker && make docker-tag && make docker-push

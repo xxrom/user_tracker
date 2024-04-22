@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ut-front-deploy
+  labels:
+    app: ut-front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ut-front
+  template:
+    metadata:
+      labels:
+        app: ut-front
+    spec:
+      #hostNetwork: true
+      containers:
+        - name: ut-front
+          image: 192.168.77.150:8044/library/ut-front:latest
+          ports:
+            - containerPort: 6070
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ut-front-service
+spec:
+  selector:
+    app: ut-front
+  ports:
+    - protocol: TCP
+      port: 6070
+      targetPort: 6070

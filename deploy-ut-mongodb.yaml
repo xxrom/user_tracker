@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
-  replicas: 1
-spec:
+metadata:
   name: ut-mongodb-deploy # random name
-    matchLabels:
   labels:
     app: mongodb # random name
-metadata:
-      app: mongodb
-    spec:
-    labels:
-  metadata:
-  template:
+spec:
+  replicas: 1
   selector:
+    matchLabels:
       app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
       containers:
         - name: mongodb
           image: mongo
@@ -30,3 +30,15 @@ metadata:
                 secretKeyRef:
                   name: mongodb-secret
                   key: mongodb-password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ut-mongodb-service # random name
+spec:
+  selector:
+    app: mongodb # selector from actual pod labels => app
+  ports:
+    - protocol: TCP
+      port: 27017 # service port
+      targetPort: 27017 # containerPort from pod

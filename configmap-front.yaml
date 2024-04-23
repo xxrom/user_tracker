@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-front
+data:
+  port: "6070"
+  next-public-server-port0: "6075"
+  server-url: service-back

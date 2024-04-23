@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-back
+data:
+  port0: "6075"
+  port1: "6076"

@@ -7,14 +7,15 @@ const tableTag = "table-data";
 
 export const getData = async (): Promise<{ data: Array<TrackType> }> => {
   "use server";
+  const url = `http://${process.env.SERVER_URL}:${process.env.NEXT_PUBLIC_SERVER_PORT0}/track`;
+
+  console.log("SERVER URL:", url);
+
   try {
-    const data = await fetch(
-      `http://${process.env.SERVER_URL}:${process.env.NEXT_PUBLIC_SERVER_PORT0}/track`,
-      {
-        cache: "no-store",
-        next: { tags: [tableTag] },
-      },
-    );
+    const data = await fetch(url, {
+      cache: "no-store",
+      next: { tags: [tableTag] },
+    });
 
     return data.json();
   } catch (err) {

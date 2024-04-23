@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ut-mongodb-deploy # random name
+  name: deploy-mongodb # random name
   labels:
     app: mongodb # random name
 spec:
@@ -23,18 +23,19 @@ spec:
             - name: MONGO_INITDB_ROOT_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: mongodb-secret
+                  name: secret-mongodb
                   key: mongodb-username
             - name: MONGO_INITDB_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mongodb-secret
+                  name: secret-mongodb
                   key: mongodb-password
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: ut-mongodb-service # random name
+  name: service-mongodb # random name
 spec:
   selector:
     app: mongodb # selector from actual pod labels => app

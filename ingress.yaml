@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-user-tracker
+  namespace: user-tracker
+  labels:
+    name: user-tracker
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  rules:
+    - host: front.test
+      http:
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend: # "backend" word use as it is !
+              service:
+                name: service-front
+                port:
+                  number: 6070
+              # serviceName: service-front
+              # servicePort: 6070

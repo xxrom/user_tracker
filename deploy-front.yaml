@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: deploy-front
+  namespace: user-tracker
   labels:
     app: ut-front
 spec:
@@ -41,10 +42,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: service-front
+  namespace: user-tracker
 spec:
   selector:
     app: ut-front
+  #type: LoadBalancer # make it accessible from outside
   ports:
     - protocol: TCP
-      port: 6070
-      targetPort: 6070
+      port: 6070 # port inside k8s
+      targetPort: 6070 # port inside pod
+      #nodePort: 30070 # port for outside access range [30000 - 32676]
+      # !!! for activating outside IP we need to run command
+      #  `minikube service service-front` # only for minikube !!!

@@ -53,3 +53,7 @@ expose-front: # only for minikube envs !!!
 docker-images:
 	cd frontend && sudo make docker-all
 	cd backend && sudo make docker-all
+	
+# --
+remove-sudo: # disable sudo for k3s commands
+	sudo chown -R $USER:$USER /etc/rancher/k3s

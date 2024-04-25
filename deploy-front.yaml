@@ -36,6 +36,11 @@ spec:
                 configMapKeyRef:
                   name: configmap-front
                   key: next-public-server-port0
+            - name: NEXT_PUBLIC_SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap-front
+                  key: next-public-server-url
 
 ---
 apiVersion: v1

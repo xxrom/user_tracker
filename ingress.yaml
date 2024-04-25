@@ -21,3 +21,17 @@ spec:
                   number: 6070
               # serviceName: service-front
               # servicePort: 6070
+          - path: "/tracker"
+            pathType: Prefix
+            backend: # "backend" word use as it is !
+              service:
+                name: service-back
+                port:
+                  number: 6075
+          - path: "/track"
+            pathType: Prefix
+            backend: # "backend" word use as it is !
+              service:
+                name: service-back
+                port:
+                  number: 6075

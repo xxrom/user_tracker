@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-tracker-deploy
+  labels:
+    app: user-tracker
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: user-tracker
+  template:
+    metadata:
+      labels:
+        app: user-tracker
+    spec:
+      containers:
+      - name: user-tracker-monorepo
+        image: 192.168.77.150:8044/library/user_tracker-monorepo:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 6070
+      - name: mongodb
+        image: mongo:latest
+        restart: always
+        container_name: mongodb
+        environment:
+          - MONGO_INITDB_ROOT_USERNAME=admin
+          - MONGO_INITDB_ROOT_PASSWORD=admin
+        volumes:
+          - ./mongo-volume:/data/db
+        ports:
+          - "6079:27017"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-tracker-service
+spec:
+  selector:
+    app: user-tracker
+  ports:
+    - protocol: TCP
+      port: 6074
+      targetPort: 6074

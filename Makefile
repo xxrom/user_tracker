@@ -1,10 +1,10 @@
 # creaet namespace and switch to it
 namespace:
 	kubectl create namespace user-tracker
-	kubens user-tracker 
+	kubens user-tracker
 # check k8s created secret `kubectl get secret`
 mongo-secret: # 1 step (before dependent deploys)
-	kubectl apply -f secret-mongodb.yaml 
+	kubectl apply -f secret-mongodb.yaml
 
 # ---
 apply-configmaps:
@@ -44,7 +44,12 @@ restart-all:
 	make restart-mongodb
 	make restart-back
 	make restart-front
-	
+
 # ---
 expose-front: # only for minikube envs !!!
 	minikube service service-front
+
+# ---
+docker-images:
+	cd frontend && sudo make docker-all
+	cd backend && sudo make docker-all

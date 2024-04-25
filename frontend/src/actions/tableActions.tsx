@@ -7,7 +7,7 @@ const tableTag = "table-data";
 
 export const getData = async (): Promise<{ data: Array<TrackType> }> => {
   "use server";
-  const url = `http://${process.env.SERVER_URL}:${process.env.NEXT_PUBLIC_SERVER_PORT0}/track`;
+  const url = `http://${process.env.SERVER_URL}/track`;
 
   console.log("SERVER URL:", url);
 

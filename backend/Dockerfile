@@ -33,8 +33,10 @@ COPY ./tsconfig* ./
 
 ARG PORT0
 ARG PORT1
+ARG SERVER_URL
 ENV PORT0=$PORT0
 ENV PORT1=$PORT1
+ENV SERVER_URL=$SERVER_URL
 
 # Disable Next telemetry
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -43,4 +45,4 @@ EXPOSE $PORT0
 EXPOSE $PORT1
 
 # Define the command to run app
-CMD yarn prod 
+CMD yarn prod

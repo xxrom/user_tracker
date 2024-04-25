@@ -37,6 +37,11 @@ spec:
                 configMapKeyRef:
                   name: configmap-back
                   key: port1
+            - name: SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap-back
+                  key: server-url
 
 ---
 apiVersion: v1

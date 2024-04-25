@@ -6,3 +6,4 @@ metadata:
 data:
   port0: "6075"
   port1: "6076"
+  server-url: "front.test"

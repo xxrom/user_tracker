@@ -16,6 +16,11 @@ spec:
       labels:
         app: ut-back
     spec:
+      initContainers:
+        - name: check-mongo
+          image: appropriate/curl
+          command: ['sh', '-c', 'until curl -s http://service-mongodb:27017; do echo waiting for database; sleep 2; done;']
+
       containers:
         - name: ut-back
           image: 192.168.77.150:8044/library/ut-back:latest

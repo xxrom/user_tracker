@@ -6,5 +6,5 @@ metadata:
 data:
   port: "6070"
   next-public-server-port0: ""
-  next-public-server-url: "front.test"
+  next-public-server-url: "https://litl.cloud"
   server-url: "service-back:6075"

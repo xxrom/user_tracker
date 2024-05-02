@@ -31,6 +31,18 @@ spec:
                 secretKeyRef:
                   name: secret-mongodb
                   key: mongodb-password
+          readinessProbe:
+            exec:
+              command:
+              - bash
+              - "-c"
+              - |
+                mongosh --eval "db.adminCommand('ping')"
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+            periodSeconds: 10
+            failureThreshold: 20
+            successThreshold: 1
 
 ---
 apiVersion: v1

@@ -1,4 +1,4 @@
-const SERVER_URL = `http://%%SERVER_URL%%/track`;
+const SERVER_URL = `%%SERVER_URL%%/track`;
 
 const THROTTLE_SECONDS = 10;
 const BUFFER_MAX_SIZE = 3;

@@ -40,10 +40,13 @@ restart-mongodb:
 	kubectl delete deploy deploy-mongodb
 	kubectl apply -f deploy-mongodb.yaml
 restart-all:
-	make namespace
+	# make namespace
 	make restart-mongodb
 	make restart-back
 	make restart-front
+restart-ingress:
+	kubectl delete ingress ingress-user-tracker
+	kubectl apply -f ingress.yaml
 
 # ---
 expose-front: # only for minikube envs !!!
@@ -53,7 +56,7 @@ expose-front: # only for minikube envs !!!
 docker-images:
 	cd frontend && sudo make docker-all
 	cd backend && sudo make docker-all
-	
+
 # --
 remove-sudo: # disable sudo for k3s commands
 	sudo chown -R $USER:$USER /etc/rancher/k3s

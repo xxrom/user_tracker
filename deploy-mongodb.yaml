@@ -6,7 +6,7 @@ metadata:
   labels:
     app: mongodb # random name
 spec:
-  replicas: 1
+  replicas: 1 # 1 Only one replicas for now, if more then use StatefulSet !!!!
   selector:
     matchLabels:
       app: mongodb

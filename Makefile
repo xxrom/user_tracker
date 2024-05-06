@@ -49,6 +49,7 @@ restart-nfs:
 	make apply-nfs
 restart-all:
 	# make namespace
+	# make restart-nfs
 	make restart-mongodb
 	make restart-back
 	make restart-front

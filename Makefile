@@ -17,9 +17,13 @@ apply-deploys:
 	kubectl apply -f deploy-mongodb.yaml
 	kubectl apply -f deploy-back.yaml
 	kubectl apply -f deploy-front.yaml
+apply-nfs:
+	kubectl apply -f nfs-pv.yaml
+	kubectl apply -f nfs-pvc.yaml
 apply-all:
 	make apply-configmaps
 	make apply-secrets
+	make apply-nfs
 	make apply-deploys
 
 apply-ingress:
@@ -39,6 +43,10 @@ restart-mongodb:
 	kubectl apply -f configmap-mongodb.yaml
 	kubectl delete deploy deploy-mongodb
 	kubectl apply -f deploy-mongodb.yaml
+restart-nfs:
+	kubectl delete pvc nfs-pvc
+	kubectl delete pv nfs-pv
+	make apply-nfs
 restart-all:
 	# make namespace
 	make restart-mongodb

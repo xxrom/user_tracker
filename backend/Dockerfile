@@ -5,10 +5,10 @@ FROM node:21-alpine as builder
 WORKDIR /app
 
 # Copy package.json and package-lock.json
-COPY package*.json ./
+COPY package.json ./
 
 # Install app dependencies
-RUN yarn install --pure-lockfile --production=false --no-cache
+RUN yarn install --pure-lockfile --production
 
 # Clear the Yarn cache to free up space
 RUN yarn cache clean

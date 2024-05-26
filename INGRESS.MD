@@ -1,5 +1,7 @@
 # Ingress
 
+DigitalOcean port 6070 and local pc will have 80 port. (tunnel should be created 6070 => 80).
+
 Routes requests to different services in the cluster
 
 Example of the `Ingress config`:

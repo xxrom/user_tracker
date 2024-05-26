@@ -49,6 +49,7 @@ usage:
 ### How to create new namespace
 
 `kubectl create namespace my-name-space-test` - create new one
+`sudo k3s kubectrl create namespace user-tracker` - create new one with k3s
 `kubectl get namespace` - get all namespace
 
 OR !

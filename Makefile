@@ -1,3 +1,7 @@
+# Login => BUILD => Tag => push to Harbor
+build:
+	cd front && make docker-all && cd ../backend && make docker-all
+
 # creaet namespace and switch to it
 namespace:
 	kubectl create namespace user-tracker
@@ -25,6 +29,8 @@ apply-all:
 	make apply-secrets
 	make apply-nfs
 	make apply-deploys
+
+---
 
 apply-ingress:
 	kubectl apply -f ingress.yaml

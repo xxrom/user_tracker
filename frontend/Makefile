@@ -1,6 +1,11 @@
-# 0
+# MAIN COMMAND: "sudo make docker-all"
+# login => build => tag => push
+docker-all:
+	make docker-login && make docker && make docker-tag && make docker-push
+
+# Harbor
 docker-login: # admin 1-!
-	sudo docker login 192.168.77.150:8044 
+	sudo docker login 192.168.77.150:8044
 
 # local
 docker-run:
@@ -8,14 +13,10 @@ docker-run:
 
 # 1
 docker:
-	docker build -t ut-front:latest . 
+	docker build -t ut-front:latest .
 # 2
 docker-tag:
 	docker tag ut-front 192.168.77.150:8044/library/ut-front:latest
 # 3
 docker-push:
 	docker push 192.168.77.150:8044/library/ut-front:latest
-
-# build - tag - push
-docker-all:
-	make docker && make docker-tag && make docker-push

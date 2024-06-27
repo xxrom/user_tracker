@@ -30,7 +30,7 @@ apply-all:
 	make apply-nfs
 	make apply-deploys
 
----
+#---
 
 apply-ingress:
 	kubectl apply -f ingress.yaml
@@ -38,20 +38,20 @@ apply-ingress:
 # ---
 restart-back:
 	kubectl apply -f configmap-back.yaml
-	kubectl delete deploy deploy-back
+	kubectl delete deploy deploy-back || true
 	kubectl apply -f deploy-back.yaml
 restart-front:
 	kubectl apply -f configmap-front.yaml
-	kubectl delete deploy deploy-front
+	kubectl delete deploy deploy-front || true
 	kubectl apply -f deploy-front.yaml
 restart-mongodb:
 	kubectl apply -f secret-mongodb.yaml
 	kubectl apply -f configmap-mongodb.yaml
-	kubectl delete deploy deploy-mongodb
+	kubectl delete deploy deploy-mongodb || true
 	kubectl apply -f deploy-mongodb.yaml
 restart-nfs:
-	kubectl delete pvc nfs-pvc
-	kubectl delete pv nfs-pv
+	kubectl delete pvc nfs-pvc || true
+	kubectl delete pv nfs-pv || true
 	make apply-nfs
 restart-all:
 	# make namespace
@@ -60,7 +60,7 @@ restart-all:
 	make restart-back
 	make restart-front
 restart-ingress:
-	kubectl delete ingress ingress-user-tracker
+	kubectl delete ingress ingress-user-tracker || true
 	kubectl apply -f ingress.yaml
 
 # ---
